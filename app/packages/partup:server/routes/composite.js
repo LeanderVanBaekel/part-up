@@ -1,20 +1,20 @@
 Meteor.routeComposite = function(route, callback) {
-    Router.route(route, {where: 'server'}).get(function() {
-        var request = this.request;
-        var response = this.response;
-        var params = this.params;
+   Router.route(route, {where: 'server', waitOn: function(){return Meteor.subscribe(route)}, fastRender: true}).get(function() {
+       var request = this.request;
+       var response = this.response;
+       var params = this.params;
 
-        var userId = request.user ? request.user._id : null;
-        delete params.query.token;
+       var userId = request.user ? request.user._id : null;
+       delete params.query.token;
 
-        var composition = callback(request, _.extend({}, params));
-        var result = compositionToResult(userId, composition.find.bind({userId: userId}), composition.children);
+       var composition = callback(request, _.extend({}, params));
+       var result = compositionToResult(userId, composition.find.bind({userId: userId}), composition.children);
 
-        // We are going to respond in JSON format
-        response.setHeader('Content-Type', 'application/json');
+       // We are going to respond in JSON format
+       response.setHeader('Content-Type', 'application/json');
 
-        return response.end(JSON.stringify(result));
-    });
+       return response.end(JSON.stringify(result));
+   });
 };
 
 var compositionToResult = function(userId, find, children) {

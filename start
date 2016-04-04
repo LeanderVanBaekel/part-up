@@ -75,7 +75,8 @@ start() {
   else
     cd "$APP"
     echo "Starting your app in $NODE_ENV."
-    local CMD="$METEOR --settings ../$settings_file"
+    # local CMD="$METEOR --settings ../$settings_file --port 100.71.7.105:3000"
+    local CMD="$METEOR --settings ../$settings_file --port 3000"
     echo "$CMD"
     eval $CMD
   fi
